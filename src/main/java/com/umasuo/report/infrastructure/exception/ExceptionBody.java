@@ -1,4 +1,4 @@
-package com.umasuo.user.infrastructure.exception;
+package com.umasuo.report.infrastructure.exception;
 
 import lombok.Getter;
 import lombok.Setter;

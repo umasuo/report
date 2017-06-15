@@ -1,5 +1,9 @@
-package com.umasuo.user;
+package com.umasuo.report;
 
+import com.umasuo.report.infrastructure.config.DateConfig;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -18,9 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class Application {
 
   /**
+   * Logger.
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+
+  /**
    * service name.
    */
-  @Value("${spring.application.name}")
+  @Value("${spring.application.name:report-service}")
   private String serviceName;
 
   /**
@@ -30,6 +39,7 @@ public class Application {
    */
   @GetMapping("/")
   public String index() {
+    LOG.info("Zone: {}.", DateConfig.zoneId);
     return serviceName + ", system time: " + System.currentTimeMillis();
   }
 

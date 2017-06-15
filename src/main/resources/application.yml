@@ -1,5 +1,8 @@
 server:
-  port: 8809
+  port: 8810
+  date:
+    zone: Etc/GMT-8
+    formatter: yyyyMMdd
 
 logging:
   level:
@@ -25,6 +28,3 @@ jwt:
   secret: QWERTYUIOPASDFGHJKLZXCVBNM
   expires: 72000
 
-sms:
-  yunpian:
-    key: just test value
