@@ -28,3 +28,11 @@ jwt:
   secret: QWERTYUIOPASDFGHJKLZXCVBNM
   expires: 72000
 
+scheduling:
+  job:
+    cron: 0 20 10 * * *
+
+device:
+  center:
+    service:
+      url: http://localhost:8082/devices

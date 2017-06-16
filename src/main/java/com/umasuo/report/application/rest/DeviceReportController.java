@@ -38,7 +38,7 @@ public class DeviceReportController {
    * @param endDate the end date
    * @return the report by period
    */
-  @GetMapping("/deviceReports/period")
+  @GetMapping(value = "/deviceReports", params = {"startDate", "endDate"})
   public List<DeviceReportView> getReportByPeriod(@RequestHeader("developerId") String developerId,
       @RequestParam("startDate") String startDate,
       @RequestParam("endDate") String endDate) {
@@ -51,14 +51,13 @@ public class DeviceReportController {
     return result;
   }
 
-
   /**
    * Gets report by type.
    *
    * @param type the report type
    * @return the report by type
    */
-  @GetMapping("/deviceReports/type")
+  @GetMapping(value = "/deviceReports", params = {"type"})
   public List<DeviceReportView> getReportByType(@RequestHeader("developerId") String developerId,
       @RequestParam("type") String type) {
     LOG.info("Enter. report type: {}.", type);

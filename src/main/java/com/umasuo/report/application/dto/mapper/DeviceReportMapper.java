@@ -1,6 +1,7 @@
 package com.umasuo.report.application.dto.mapper;
 
 import com.google.common.collect.Lists;
+import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
 import com.umasuo.report.domain.model.DeviceReport;
 
@@ -44,5 +45,44 @@ public final class DeviceReportMapper {
     model.setTotalNumber(entity.getTotalNumber());
 
     return model;
+  }
+
+  /**
+   * To entity list.
+   *
+   * @param reportDrafts the report drafts
+   * @param yesterdayDate the yesterday date
+   * @return the list
+   */
+  public static List<DeviceReport> toEntity(List<DeviceReportDraft> reportDrafts,
+      String yesterdayDate) {
+    List<DeviceReport> entities = Lists.newArrayList();
+
+    Consumer<DeviceReportDraft> consumer = deviceReportDraft -> entities
+        .add(toEntity(deviceReportDraft, yesterdayDate));
+
+    reportDrafts.stream().forEach(consumer);
+
+    return entities;
+  }
+
+  /**
+   * To entity device report.
+   *
+   * @param draft the draft
+   * @param yesterdayDate the yesterday date
+   * @return the device report
+   */
+  public static DeviceReport toEntity(DeviceReportDraft draft, String yesterdayDate) {
+    DeviceReport entity = new DeviceReport();
+
+    entity.setLocalDate(yesterdayDate);
+    entity.setOnlineNumber(draft.getOnlineNumber());
+    entity.setRegisterNumber(draft.getRegisterNumber());
+    entity.setTotalNumber(draft.getTotalNumber());
+    entity.setDeveloperId(draft.getDeveloperId());
+    entity.setDeviceDefinitionId(draft.getDeviceDefinitionId());
+
+    return entity;
   }
 }

@@ -1,12 +1,15 @@
 package com.umasuo.report.application.service;
 
 import com.google.common.collect.Lists;
+import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
 import com.umasuo.report.application.dto.mapper.DeviceReportMapper;
 import com.umasuo.report.domain.model.DeviceReport;
 import com.umasuo.report.domain.service.DeviceReportService;
+import com.umasuo.report.infrastructure.config.DateConfig;
 import com.umasuo.report.infrastructure.enums.ReportType;
 import com.umasuo.report.infrastructure.util.DateUtils;
+import com.umasuo.report.infrastructure.util.ReportUtils;
 import com.umasuo.report.infrastructure.validator.DateValidator;
 
 import org.slf4j.Logger;
@@ -14,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -34,6 +39,12 @@ public class DeviceReportApplication {
   private DeviceReportService service;
 
   /**
+   * The Rest client.
+   */
+  @Autowired
+  private transient RestClient restClient;
+
+  /**
    * Gets report by period.
    *
    * @param developerId the developer id
@@ -41,7 +52,8 @@ public class DeviceReportApplication {
    * @param endDate the end date
    * @return the report by period
    */
-  public List<DeviceReportView> getReportByPeriod(String developerId, String startDate, String endDate) {
+  public List<DeviceReportView> getReportByPeriod(String developerId, String startDate,
+      String endDate) {
     LOG.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
         developerId, startDate, endDate);
 
@@ -52,6 +64,7 @@ public class DeviceReportApplication {
     List<DeviceReport> reports = service.getReportByDate(developerId, startDate, endDate);
 
     List<DeviceReportView> result = DeviceReportMapper.toModel(reports);
+    ReportUtils.calculateDeviceReport(result);
 
     LOG.debug("Exit. device report size: {}.", result.size());
 
@@ -89,7 +102,12 @@ public class DeviceReportApplication {
   private List<DeviceReportView> getRealTimeReport(String developerId) {
     LOG.debug("Enter. developerId: {}.");
 
-    List<DeviceReportView> result = Lists.newArrayList();
+    long startDate = ZonedDateTime.now(DateConfig.zoneId)
+        .truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
+
+    List<DeviceReportView> result = restClient.getRealTimeDeviceReport(startDate, developerId);
+
+    ReportUtils.calculateDeviceReport(result);
 
     return result;
   }
@@ -110,10 +128,28 @@ public class DeviceReportApplication {
     List<DeviceReport> reports = service.getReportByDate(developerId, startDate, endDate);
 
     List<DeviceReportView> result = DeviceReportMapper.toModel(reports);
+    ReportUtils.calculateDeviceReport(result);
 
     LOG.debug("Exit. device report size: {}.", result.size());
 
     return result;
   }
 
+
+  /**
+   * Handle yesterday report.
+   *
+   * @param reportDrafts the report drafts
+   */
+  public void handleYesterdayReport(List<DeviceReportDraft> reportDrafts) {
+    LOG.debug("Enter. report size: {}.", reportDrafts.size());
+
+    String yesterdayDate = DateConfig.dateTimeFormatter
+        .format(ZonedDateTime.now(DateConfig.zoneId).minusDays(1L));
+
+    List<DeviceReport> reports = DeviceReportMapper.toEntity(reportDrafts, yesterdayDate);
+    service.saveAll(reports);
+
+    LOG.debug("Exit.");
+  }
 }

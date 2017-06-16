@@ -43,6 +43,7 @@ public class DeviceReportService {
   /**
    * Gets report by date.
    *
+   * @param developerId the developer id
    * @param startDate the start date
    * @param endDate the end date
    * @return the report by date
@@ -54,5 +55,19 @@ public class DeviceReportService {
     List<DeviceReport> reports = repository.getReportByDate(developerId, startDate, endDate);
 
     return reports;
+  }
+
+
+  /**
+   * Save all.
+   *
+   * @param reports the reports
+   */
+  public void saveAll(List<DeviceReport> reports) {
+    LOG.debug("Enter. reports size: {}.", reports.size());
+
+    repository.save(reports);
+
+    LOG.debug("Exit.");
   }
 }
