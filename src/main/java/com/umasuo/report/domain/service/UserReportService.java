@@ -1,7 +1,7 @@
 package com.umasuo.report.domain.service;
 
-import com.umasuo.report.domain.model.DeviceReport;
-import com.umasuo.report.infrastructure.repository.DeviceReportRepository;
+import com.umasuo.report.domain.model.UserReport;
+import com.umasuo.report.infrastructure.repository.UserReportRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Davis on 17/6/15.
+ * Created by Davis on 17/6/16.
  */
 @Service
-public class DeviceReportService {
+public class UserReportService {
 
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(DeviceReportService.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UserReportService.class);
 
   /**
-   * The Device report repository.
+   * The Repository.
    */
   @Autowired
-  private DeviceReportRepository repository;
+  private transient UserReportRepository repository;
 
   /**
    * Gets report by date.
@@ -35,22 +35,21 @@ public class DeviceReportService {
    * @param endDate the end date
    * @return the report by date
    */
-  public List<DeviceReport> getReportByDate(String developerId, String startDate, String endDate) {
+  public List<UserReport> getReportByDate(String developerId, String startDate, String endDate) {
     LOG.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
         developerId, startDate, endDate);
 
-    List<DeviceReport> reports = repository.getReportByDate(developerId, startDate, endDate);
+    List<UserReport> reports = repository.getReportByDate(developerId, startDate, endDate);
 
     return reports;
   }
-
 
   /**
    * Save all.
    *
    * @param reports the reports
    */
-  public void saveAll(List<DeviceReport> reports) {
+  public void saveAll(List<UserReport> reports) {
     LOG.debug("Enter. reports size: {}.", reports.size());
 
     repository.save(reports);

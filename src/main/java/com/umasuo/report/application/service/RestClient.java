@@ -3,6 +3,7 @@ package com.umasuo.report.application.service;
 import com.google.common.collect.Lists;
 import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
+import com.umasuo.report.application.dto.UserReportView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +80,34 @@ public class RestClient {
         restTemplate.exchange(url, HttpMethod.GET, entity, DeviceReportView[].class);
 
     List<DeviceReportView> result = Lists.newArrayList(response.getBody());
+
+    LOG.info("Exit. report size: {}.", result);
+    return result;
+  }
+
+  /**
+   * Gets real time device report.
+   *
+   * @param startTime the start time
+   * @param developerId the developer id
+   * @return the real time device report
+   */
+  public UserReportView getRealTimeUserReport(long startTime, String developerId) {
+    // TODO: 17/6/16
+    LOG.info("Enter. startTime: {}, developerId: {}.", startTime, developerId);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("developerId", developerId);
+
+    HttpEntity entity = new HttpEntity(headers);
+
+    String url = UriComponentsBuilder.fromHttpUrl(deviceCenterUrl)
+        .queryParam("startTime", startTime).build().encode().toUriString();
+
+    ResponseEntity<UserReportView> response =
+        restTemplate.exchange(url, HttpMethod.GET, entity, UserReportView.class);
+
+    UserReportView result = response.getBody();
 
     LOG.info("Exit. report size: {}.", result);
     return result;
