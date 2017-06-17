@@ -130,7 +130,6 @@ public class UserReportApplication {
     return result;
   }
 
-
   /**
    * Handle yesterday report.
    *

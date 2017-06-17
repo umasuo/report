@@ -134,8 +134,7 @@ public class DeviceReportApplication {
 
     return result;
   }
-
-
+  
   /**
    * Handle yesterday report.
    *

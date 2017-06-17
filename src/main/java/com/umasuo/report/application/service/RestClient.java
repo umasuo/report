@@ -32,6 +32,9 @@ public class RestClient {
   @Value("${device.center.service.url:http://device-center/}")
   private String deviceCenterUrl;
 
+  @Value("${user.service.url:http://users/}")
+  private String userUrl;
+
   /**
    * Rest template.
    */
@@ -93,7 +96,6 @@ public class RestClient {
    * @return the real time device report
    */
   public UserReportView getRealTimeUserReport(long startTime, String developerId) {
-    // TODO: 17/6/16
     LOG.info("Enter. startTime: {}, developerId: {}.", startTime, developerId);
 
     HttpHeaders headers = new HttpHeaders();
@@ -101,7 +103,7 @@ public class RestClient {
 
     HttpEntity entity = new HttpEntity(headers);
 
-    String url = UriComponentsBuilder.fromHttpUrl(deviceCenterUrl)
+    String url = UriComponentsBuilder.fromHttpUrl(userUrl)
         .queryParam("startTime", startTime).build().encode().toUriString();
 
     ResponseEntity<UserReportView> response =
@@ -110,6 +112,28 @@ public class RestClient {
     UserReportView result = response.getBody();
 
     LOG.info("Exit. report size: {}.", result);
+    return result;
+  }
+
+
+  /**
+   * Gets user report.
+   *
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return the user report
+   */
+  public List<UserReportView> getUserReport(long startTime, long endTime) {
+    LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
+
+    String url = UriComponentsBuilder.fromHttpUrl(userUrl)
+        .queryParam("startTime", startTime)
+        .queryParam("endTime", endTime).build().encode().toUriString();
+
+    UserReportView[] reportDrafts = restTemplate.getForObject(url, UserReportView[].class);
+
+    List<UserReportView> result = Lists.newArrayList(reportDrafts);
+
     return result;
   }
 }

@@ -30,9 +30,12 @@ jwt:
 
 scheduling:
   job:
-    cron: 0 20 10 * * *
+    cron: 0 5 0 * * *
 
 device:
   center:
     service:
-      url: http://localhost:8082/devices
+      url: http://localhost:8082/devices/reports/
+user:
+  service:
+    url: http://localhost:8809/users/reports/

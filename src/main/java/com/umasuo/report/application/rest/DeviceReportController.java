@@ -1,5 +1,7 @@
 package com.umasuo.report.application.rest;
 
+import static com.umasuo.report.infrastructure.Router.DEVICE_REPORT_ROOT;
+
 import com.umasuo.report.application.dto.DeviceReportView;
 import com.umasuo.report.application.service.DeviceReportApplication;
 
@@ -38,7 +40,7 @@ public class DeviceReportController {
    * @param endDate the end date
    * @return the report by period
    */
-  @GetMapping(value = "/deviceReports", params = {"startDate", "endDate"})
+  @GetMapping(value = DEVICE_REPORT_ROOT, params = {"startDate", "endDate"})
   public List<DeviceReportView> getReportByPeriod(@RequestHeader("developerId") String developerId,
       @RequestParam("startDate") String startDate,
       @RequestParam("endDate") String endDate) {
@@ -46,7 +48,7 @@ public class DeviceReportController {
 
     List<DeviceReportView> result = application.getReportByPeriod(developerId, startDate, endDate);
 
-    LOG.info("Exit. device report size: {}.", result);
+    LOG.info("Exit. device report size: {}.", result.size());
 
     return result;
   }
@@ -57,7 +59,7 @@ public class DeviceReportController {
    * @param type the report type
    * @return the report by type
    */
-  @GetMapping(value = "/deviceReports", params = {"type"})
+  @GetMapping(value = DEVICE_REPORT_ROOT, params = {"type"})
   public List<DeviceReportView> getReportByType(@RequestHeader("developerId") String developerId,
       @RequestParam("type") String type) {
     LOG.info("Enter. report type: {}.", type);
