@@ -4,6 +4,8 @@ import com.umasuo.report.infrastructure.config.DateConfig;
 import com.umasuo.report.infrastructure.enums.ReportType;
 
 import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Created by Davis on 17/6/15.
@@ -14,6 +16,39 @@ public final class DateUtils {
    * Instantiates a new Date utils.
    */
   private DateUtils() {
+  }
+
+  /**
+   * Get start date of the machine.
+   *
+   * @return Long
+   */
+  public static Long getStartTime() {
+
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    cal.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+    return cal.getTime().getTime() / 1000;
+  }
+
+  /**
+   * 获取某个时区的的当前0点.
+   *
+   * @param timeZone 时区，格式："GMT+0"
+   * @return Long
+   */
+  public static Long getStartTime(String timeZone) {
+
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+    return cal.getTime().getTime() / 1000;//只精确到秒
   }
 
   /**

@@ -1,6 +1,6 @@
 package com.umasuo.report.application.service;
 
-import com.umasuo.report.application.dto.UserReportView;
+import com.umasuo.report.application.dto.UserReportDraft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +47,9 @@ public class UserReportScheduled {
     long endTime = startTime + SECOND_OF_HOUR;
 
     // get three kind of data: increase, online, total
-    List<UserReportView> reportDrafts = restClient.getUserReport(startTime, endTime);
+    List<UserReportDraft> reportDrafts = restClient.getUserReport(startTime, endTime);
 
-    reportApplication.handleHourlyReport(reportDrafts, startTime);
+    reportApplication.handleFetchHourlyReport(reportDrafts, startTime);
 
     LOG.info("Exit.");
   }

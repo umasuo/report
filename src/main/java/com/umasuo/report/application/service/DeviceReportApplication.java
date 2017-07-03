@@ -11,7 +11,6 @@ import com.umasuo.report.infrastructure.enums.ReportType;
 import com.umasuo.report.infrastructure.util.DateUtils;
 import com.umasuo.report.infrastructure.util.ReportUtils;
 import com.umasuo.report.infrastructure.validator.DateValidator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class DeviceReportApplication {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(DeviceReportApplication.class);
+  private static final Logger logger = LoggerFactory.getLogger(DeviceReportApplication.class);
 
   /**
    * The Service.
@@ -54,7 +53,7 @@ public class DeviceReportApplication {
    */
   public List<DeviceReportView> getReportByPeriod(String developerId, String startDate,
                                                   String endDate) {
-    LOG.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
+    logger.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
         developerId, startDate, endDate);
 
     DateValidator.validatePattern(startDate);
@@ -66,7 +65,7 @@ public class DeviceReportApplication {
     List<DeviceReportView> result = DeviceReportMapper.toModel(reports);
     ReportUtils.calculateDeviceReport(result);
 
-    LOG.debug("Exit. device report size: {}.", result.size());
+    logger.debug("Exit. device report size: {}.", result.size());
 
     return result;
   }
@@ -79,17 +78,16 @@ public class DeviceReportApplication {
    * @return the report by type
    */
   public List<DeviceReportView> getReportByType(String developerId, String reportType) {
-    LOG.debug("Enter. reportType: {}.", reportType);
-    ReportType type = ReportType.build(reportType);
+    logger.debug("Enter. reportType: {}.", reportType);
 
     List<DeviceReportView> result = Lists.newArrayList();
-    if (type.equals(ReportType.DAILY)) {
+    if (reportType.equals(ReportType.DAILY.getType())) {
       result = getRealTimeReport(developerId);
     } else {
-      result = getStatisticsReport(developerId, type);
+      result = null;
     }
 
-    LOG.debug("Exit. device report size: {}.", result.size());
+    logger.debug("Exit. device report size: {}.", result.size());
     return result;
   }
 
@@ -100,7 +98,7 @@ public class DeviceReportApplication {
    * @return list of DeviceReportView
    */
   private List<DeviceReportView> getRealTimeReport(String developerId) {
-    LOG.debug("Enter. developerId: {}.");
+    logger.debug("Enter. developerId: {}.");
 
     long startDate = ZonedDateTime.now(DateConfig.zoneId)
         .truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
@@ -120,7 +118,7 @@ public class DeviceReportApplication {
    * @return list of DeviceReportView
    */
   private List<DeviceReportView> getStatisticsReport(String developerId, ReportType type) {
-    LOG.debug("Enter. reportType: {}.", type);
+    logger.debug("Enter. reportType: {}.", type);
 
     String startDate = DateUtils.getStartDate(type);
     String endDate = DateUtils.getEndDate();
@@ -130,7 +128,7 @@ public class DeviceReportApplication {
     List<DeviceReportView> result = DeviceReportMapper.toModel(reports);
     ReportUtils.calculateDeviceReport(result);
 
-    LOG.debug("Exit. device report size: {}.", result.size());
+    logger.debug("Exit. device report size: {}.", result.size());
 
     return result;
   }
@@ -141,12 +139,12 @@ public class DeviceReportApplication {
    * @param reportDrafts the report drafts
    */
   public void handleHourlyReport(List<DeviceReportDraft> reportDrafts, Long startTime) {
-    LOG.debug("Enter. report size: {}.", reportDrafts.size());
+    logger.debug("Enter. report size: {}.", reportDrafts.size());
 
 
     List<DeviceReport> reports = DeviceReportMapper.toEntity(reportDrafts, startTime);
     service.saveAll(reports);
 
-    LOG.debug("Exit.");
+    logger.debug("Exit.");
   }
 }

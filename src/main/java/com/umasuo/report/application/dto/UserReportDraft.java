@@ -5,17 +5,21 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Created by umasuo on 17/7/3.
+ * Created by Davis on 17/6/16.
  */
 @Data
-public class UserReportView implements Serializable {
+public class UserReportDraft implements Serializable {
 
-  private static final long serialVersionUID = 933303007662433679L;
+  private static final long serialVersionUID = 3014600617785980921L;
+  /**
+   * The developer id.
+   */
+  private String developerId;
 
   /**
-   * date time of the data.
+   * Start time of this hour.
    */
-  private Long date;
+  private Long startTime;
 
   /**
    * The increase number of the hour.

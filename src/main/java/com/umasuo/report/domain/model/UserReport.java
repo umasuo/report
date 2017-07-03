@@ -32,7 +32,7 @@ public class UserReport {
   private String developerId;
 
   /**
-   * 统计的那个小时的其实时间戳.
+   * 统计的那个小时的起始时间戳.
    */
   private Long startTime;
 
@@ -40,5 +40,15 @@ public class UserReport {
    * 这个小时内新增的用户数量.
    */
   private Integer increaseNumber;
+
+  /**
+   * 截止目前，当天的活跃的用户数.
+   */
+  private Integer activeNumber;
+
+  /**
+   * 截止当前小时，总的用户注册数
+   */
+  private Integer totalNumber;
 
 }

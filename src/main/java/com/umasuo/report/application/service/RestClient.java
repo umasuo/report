@@ -3,7 +3,7 @@ package com.umasuo.report.application.service;
 import com.google.common.collect.Lists;
 import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
-import com.umasuo.report.application.dto.UserReportView;
+import com.umasuo.report.application.dto.UserReportDraft;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +95,7 @@ public class RestClient {
    * @param developerId the developer id
    * @return the real time device report
    */
-  public UserReportView getRealTimeUserReport(long startTime, String developerId) {
+  public UserReportDraft getRealTimeUserReport(long startTime, String developerId) {
     LOG.info("Enter. startTime: {}, developerId: {}.", startTime, developerId);
 
     HttpHeaders headers = new HttpHeaders();
@@ -106,10 +106,10 @@ public class RestClient {
     String url = UriComponentsBuilder.fromHttpUrl(userUrl)
         .queryParam("startTime", startTime).build().encode().toUriString();
 
-    ResponseEntity<UserReportView> response =
-        restTemplate.exchange(url, HttpMethod.GET, entity, UserReportView.class);
+    ResponseEntity<UserReportDraft> response =
+        restTemplate.exchange(url, HttpMethod.GET, entity, UserReportDraft.class);
 
-    UserReportView result = response.getBody();
+    UserReportDraft result = response.getBody();
 
     LOG.info("Exit. report size: {}.", result);
     return result;
@@ -123,16 +123,16 @@ public class RestClient {
    * @param endTime the end time
    * @return the user report
    */
-  public List<UserReportView> getUserReport(long startTime, long endTime) {
+  public List<UserReportDraft> getUserReport(long startTime, long endTime) {
     LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
     String url = UriComponentsBuilder.fromHttpUrl(userUrl)
         .queryParam("startTime", startTime)
         .queryParam("endTime", endTime).build().encode().toUriString();
 
-    UserReportView[] reportDrafts = restTemplate.getForObject(url, UserReportView[].class);
+    UserReportDraft[] reportDrafts = restTemplate.getForObject(url, UserReportDraft[].class);
 
-    List<UserReportView> result = Lists.newArrayList(reportDrafts);
+    List<UserReportDraft> result = Lists.newArrayList(reportDrafts);
 
     return result;
   }

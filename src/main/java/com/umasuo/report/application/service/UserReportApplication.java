@@ -1,21 +1,18 @@
 package com.umasuo.report.application.service;
 
-import com.google.common.collect.Lists;
+import com.umasuo.report.application.dto.UserReportDraft;
 import com.umasuo.report.application.dto.UserReportView;
 import com.umasuo.report.application.dto.mapper.UserReportMapper;
 import com.umasuo.report.domain.model.UserReport;
 import com.umasuo.report.domain.service.UserReportService;
-import com.umasuo.report.infrastructure.config.DateConfig;
 import com.umasuo.report.infrastructure.enums.ReportType;
 import com.umasuo.report.infrastructure.util.DateUtils;
-import com.umasuo.report.infrastructure.validator.DateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +26,7 @@ public class UserReportApplication {
    */
   private static final Logger logger = LoggerFactory.getLogger(UserReportApplication.class);
 
+  private static long SECOND_OF_DAY = 86400;
   /**
    * The Service.
    */
@@ -42,47 +40,23 @@ public class UserReportApplication {
   private transient RestClient restClient;
 
   /**
-   * Gets report by period.
-   *
-   * @param developerId the developer id
-   * @param startDate   the start date
-   * @param endDate     the end date
-   * @return the report by period
-   */
-  public List<UserReportView> getReportByPeriod(String developerId, String startDate,
-                                                String endDate) {
-    logger.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
-        developerId, startDate, endDate);
-
-    DateValidator.validatePattern(startDate);
-    DateValidator.validatePattern(endDate);
-    DateValidator.validatePeriod(startDate, endDate);
-
-    List<UserReport> reports = service.getReportByDate(developerId, startDate, endDate);
-
-    List<UserReportView> result = UserReportMapper.toModel(reports);
-
-    logger.debug("Exit. device report size: {}.", result.size());
-
-    return result;
-  }
-
-  /**
    * Gets report by type.
    *
    * @param developerId the developer id
    * @param reportType  the report type
    * @return the report by type
    */
-  public List<UserReportView> getReportByType(String developerId, String reportType) {
+  public List<UserReportView> getReportByType(String developerId, String reportType, String
+      timeZone) {
     logger.debug("Enter. reportType: {}.", reportType);
-    ReportType type = ReportType.build(reportType);
 
-    List<UserReportView> result = Lists.newArrayList();
-    if (type.equals(ReportType.DAILY)) {
-      result = getRealTimeReport(developerId);
+    List<UserReportView> result;
+
+    if (reportType.equals(ReportType.DAILY.getType())) {
+      result = getDailyReport(developerId, timeZone);
     } else {
-      result = getStatisticsReport(developerId, type);
+      // TODO: 17/7/3
+      result = new ArrayList<>();
     }
 
     logger.debug("Exit. device report size: {}.", result.size());
@@ -90,51 +64,32 @@ public class UserReportApplication {
   }
 
   /**
-   * Get real time report.
+   * Get daily report for user reports data.
+   * todo 目前只获取近30天的数据.
    *
    * @param developerId the developer id
    * @return list of DeviceReportView
    */
-  private List<UserReportView> getRealTimeReport(String developerId) {
+  private List<UserReportView> getDailyReport(String developerId, String timeZone) {
     logger.debug("Enter. developerId: {}.");
 
-    long startDate = ZonedDateTime.now(DateConfig.zoneId)
-        .truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
+    long endTime = DateUtils.getStartTime(timeZone);
+    long startTime = endTime - SECOND_OF_DAY * 30;
+    List<UserReport> hourlyReport = service.getReportByDate(developerId, startTime, endTime);
+    //如此转换有一个前提，就是每次统计都需要正确完成，如果完成不正确，那么统计出的数据可能会跨天
+    List<UserReportView> dailyReport = UserReportMapper.hourlyToDaily(hourlyReport);
 
-    UserReportView result = restClient.getRealTimeUserReport(startDate, developerId);
-
-    logger.debug("Exit. user report: {}.", result);
-    return Lists.newArrayList(result);
+    logger.debug("Exit. user report: {}.", dailyReport);
+    return dailyReport;
   }
 
-  /**
-   * Get statistics report.
-   *
-   * @param developerId the developer id
-   * @param type        the report date type
-   * @return list of DeviceReportView
-   */
-  private List<UserReportView> getStatisticsReport(String developerId, ReportType type) {
-    logger.debug("Enter. reportType: {}.", type);
-
-    String startDate = DateUtils.getStartDate(type);
-    String endDate = DateUtils.getEndDate();
-
-    List<UserReport> reports = service.getReportByDate(developerId, startDate, endDate);
-
-    List<UserReportView> result = UserReportMapper.toModel(reports);
-
-    logger.debug("Exit. user report size: {}.", result.size());
-
-    return result;
-  }
 
   /**
    * Handle yesterday report.
    *
    * @param reportDrafts the report drafts
    */
-  public void handleHourlyReport(List<UserReportView> reportDrafts, Long startTime) {
+  public void handleFetchHourlyReport(List<UserReportDraft> reportDrafts, Long startTime) {
     logger.debug("Enter. report size: {}.", reportDrafts.size());
 
     List<UserReport> reports = UserReportMapper.toEntity(reportDrafts, startTime);
