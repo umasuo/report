@@ -1,7 +1,6 @@
 package com.umasuo.report.domain.model;
 
 import lombok.Data;
-
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -33,22 +32,13 @@ public class UserReport {
   private String developerId;
 
   /**
-   * The Local date.
+   * 统计的那个小时的其实时间戳.
    */
-  private String localDate;
+  private Long startTime;
 
   /**
-   * The Register number.
+   * 这个小时内新增的用户数量.
    */
-  private Integer registerNumber;
+  private Integer increaseNumber;
 
-  /**
-   * The Online number.
-   */
-  private Integer onlineNumber;
-
-  /**
-   * The Total number.
-   */
-  private Integer totalNumber;
 }

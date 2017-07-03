@@ -1,8 +1,6 @@
 package com.umasuo.report.application.service;
 
 import com.umasuo.report.application.dto.UserReportView;
-import com.umasuo.report.infrastructure.config.DateConfig;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -30,6 +27,8 @@ public class UserReportScheduled {
   @Autowired
   private transient UserReportApplication reportApplication;
 
+  private static long SECOND_OF_HOUR = 3600;
+
   /**
    * The Rest client.
    */
@@ -37,21 +36,20 @@ public class UserReportScheduled {
   private transient RestClient restClient;
 
   /**
-   * Scheduled task.
+   * Schedule task for collect report data from other service.
    */
-  @Scheduled(cron = "${scheduling.job.cron}", zone = "${server.date.zone}")
-  private void getYesterdayReport() {
+  @Scheduled(cron = "${scheduling.job.cron}")
+  private void getHourlyReportData() {
     LOG.info("Enter. system time: {}.", ZonedDateTime.now());
 
-    ZonedDateTime now = ZonedDateTime.now(DateConfig.zoneId);
+    long curTime = System.currentTimeMillis() / 1000;
+    long startTime = curTime - curTime % SECOND_OF_HOUR - SECOND_OF_HOUR;
+    long endTime = startTime + SECOND_OF_HOUR;
 
-    long startDateTime = now.minusDays(1L).truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
-    long endDateTime = now.truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
+    // get three kind of data: increase, online, total
+    List<UserReportView> reportDrafts = restClient.getUserReport(startTime, endTime);
 
-    List<UserReportView> reportDrafts =
-        restClient.getUserReport(startDateTime, endDateTime);
-
-    reportApplication.handleYesterdayReport(reportDrafts);
+    reportApplication.handleHourlyReport(reportDrafts, startTime);
 
     LOG.info("Exit.");
   }

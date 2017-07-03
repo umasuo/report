@@ -39,10 +39,7 @@ public final class DeviceReportMapper {
     DeviceReportView model = new DeviceReportView();
 
     model.setDeviceDefinitionId(entity.getDeviceDefinitionId());
-    model.setLocalDate(entity.getLocalDate());
-    model.setOnlineNumber(entity.getOnlineNumber());
-    model.setRegisterNumber(entity.getRegisterNumber());
-    model.setTotalNumber(entity.getTotalNumber());
+    //TODO finish this data
 
     return model;
   }
@@ -51,17 +48,19 @@ public final class DeviceReportMapper {
    * To entity list.
    *
    * @param reportDrafts the report drafts
-   * @param yesterdayDate the yesterday date
+   * @param startTime    the yesterday date
    * @return the list
    */
-  public static List<DeviceReport> toEntity(List<DeviceReportDraft> reportDrafts,
-      String yesterdayDate) {
+  public static List<DeviceReport> toEntity(List<DeviceReportDraft> reportDrafts, Long startTime) {
     List<DeviceReport> entities = Lists.newArrayList();
 
-    Consumer<DeviceReportDraft> consumer = deviceReportDraft -> entities
-        .add(toEntity(deviceReportDraft, yesterdayDate));
-
-    reportDrafts.stream().forEach(consumer);
+    reportDrafts.stream().forEach(
+        reportDraft -> {
+          if (reportDraft.getStartTime().equals(startTime)) {
+            entities.add(toEntity(reportDraft, startTime));
+          }
+        }
+    );
 
     return entities;
   }
@@ -69,19 +68,19 @@ public final class DeviceReportMapper {
   /**
    * To entity device report.
    *
-   * @param draft the draft
-   * @param yesterdayDate the yesterday date
+   * @param draft     the draft
+   * @param startTime the yesterday date
    * @return the device report
    */
-  public static DeviceReport toEntity(DeviceReportDraft draft, String yesterdayDate) {
+  public static DeviceReport toEntity(DeviceReportDraft draft, Long startTime) {
     DeviceReport entity = new DeviceReport();
 
-    entity.setLocalDate(yesterdayDate);
-    entity.setOnlineNumber(draft.getOnlineNumber());
-    entity.setRegisterNumber(draft.getRegisterNumber());
-    entity.setTotalNumber(draft.getTotalNumber());
     entity.setDeveloperId(draft.getDeveloperId());
     entity.setDeviceDefinitionId(draft.getDeviceDefinitionId());
+    entity.setStartTime(startTime);
+    entity.setIncreaseNumber(draft.getIncreaseNumber());
+    entity.setActiveNumber(draft.getActiveNumber());
+    entity.setTotalNumber(draft.getTotalNumber());
 
     return entity;
   }

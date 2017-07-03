@@ -48,12 +48,12 @@ public class DeviceReportApplication {
    * Gets report by period.
    *
    * @param developerId the developer id
-   * @param startDate the start date
-   * @param endDate the end date
+   * @param startDate   the start date
+   * @param endDate     the end date
    * @return the report by period
    */
   public List<DeviceReportView> getReportByPeriod(String developerId, String startDate,
-      String endDate) {
+                                                  String endDate) {
     LOG.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
         developerId, startDate, endDate);
 
@@ -75,7 +75,7 @@ public class DeviceReportApplication {
    * Gets report by type.
    *
    * @param developerId the developer id
-   * @param reportType the report type
+   * @param reportType  the report type
    * @return the report by type
    */
   public List<DeviceReportView> getReportByType(String developerId, String reportType) {
@@ -116,7 +116,7 @@ public class DeviceReportApplication {
    * Get statistics report.
    *
    * @param developerId the developer id
-   * @param type the report date type
+   * @param type        the report date type
    * @return list of DeviceReportView
    */
   private List<DeviceReportView> getStatisticsReport(String developerId, ReportType type) {
@@ -134,19 +134,17 @@ public class DeviceReportApplication {
 
     return result;
   }
-  
+
   /**
    * Handle yesterday report.
    *
    * @param reportDrafts the report drafts
    */
-  public void handleYesterdayReport(List<DeviceReportDraft> reportDrafts) {
+  public void handleHourlyReport(List<DeviceReportDraft> reportDrafts, Long startTime) {
     LOG.debug("Enter. report size: {}.", reportDrafts.size());
 
-    String yesterdayDate = DateConfig.dateTimeFormatter
-        .format(ZonedDateTime.now(DateConfig.zoneId).minusDays(1L));
 
-    List<DeviceReport> reports = DeviceReportMapper.toEntity(reportDrafts, yesterdayDate);
+    List<DeviceReport> reports = DeviceReportMapper.toEntity(reportDrafts, startTime);
     service.saveAll(reports);
 
     LOG.debug("Exit.");

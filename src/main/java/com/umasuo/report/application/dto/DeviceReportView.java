@@ -15,17 +15,17 @@ public class DeviceReportView {
   /**
    * The Local date.
    */
-  private String localDate;
+  private Long startTime;
 
   /**
    * The Register number.
    */
-  private Integer registerNumber;
+  private Integer increaseNumber;
 
   /**
    * The Online number.
    */
-  private Integer onlineNumber;
+  private Integer activeNumber;
 
   /**
    * The Total number.

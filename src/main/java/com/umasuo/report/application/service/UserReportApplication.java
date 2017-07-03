@@ -9,7 +9,6 @@ import com.umasuo.report.infrastructure.config.DateConfig;
 import com.umasuo.report.infrastructure.enums.ReportType;
 import com.umasuo.report.infrastructure.util.DateUtils;
 import com.umasuo.report.infrastructure.validator.DateValidator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class UserReportApplication {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(UserReportApplication.class);
+  private static final Logger logger = LoggerFactory.getLogger(UserReportApplication.class);
 
   /**
    * The Service.
@@ -46,13 +45,13 @@ public class UserReportApplication {
    * Gets report by period.
    *
    * @param developerId the developer id
-   * @param startDate the start date
-   * @param endDate the end date
+   * @param startDate   the start date
+   * @param endDate     the end date
    * @return the report by period
    */
   public List<UserReportView> getReportByPeriod(String developerId, String startDate,
-      String endDate) {
-    LOG.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
+                                                String endDate) {
+    logger.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
         developerId, startDate, endDate);
 
     DateValidator.validatePattern(startDate);
@@ -63,7 +62,7 @@ public class UserReportApplication {
 
     List<UserReportView> result = UserReportMapper.toModel(reports);
 
-    LOG.debug("Exit. device report size: {}.", result.size());
+    logger.debug("Exit. device report size: {}.", result.size());
 
     return result;
   }
@@ -72,11 +71,11 @@ public class UserReportApplication {
    * Gets report by type.
    *
    * @param developerId the developer id
-   * @param reportType the report type
+   * @param reportType  the report type
    * @return the report by type
    */
   public List<UserReportView> getReportByType(String developerId, String reportType) {
-    LOG.debug("Enter. reportType: {}.", reportType);
+    logger.debug("Enter. reportType: {}.", reportType);
     ReportType type = ReportType.build(reportType);
 
     List<UserReportView> result = Lists.newArrayList();
@@ -86,7 +85,7 @@ public class UserReportApplication {
       result = getStatisticsReport(developerId, type);
     }
 
-    LOG.debug("Exit. device report size: {}.", result.size());
+    logger.debug("Exit. device report size: {}.", result.size());
     return result;
   }
 
@@ -97,14 +96,14 @@ public class UserReportApplication {
    * @return list of DeviceReportView
    */
   private List<UserReportView> getRealTimeReport(String developerId) {
-    LOG.debug("Enter. developerId: {}.");
+    logger.debug("Enter. developerId: {}.");
 
     long startDate = ZonedDateTime.now(DateConfig.zoneId)
         .truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
 
     UserReportView result = restClient.getRealTimeUserReport(startDate, developerId);
 
-    LOG.debug("Exit. user report: {}.", result);
+    logger.debug("Exit. user report: {}.", result);
     return Lists.newArrayList(result);
   }
 
@@ -112,11 +111,11 @@ public class UserReportApplication {
    * Get statistics report.
    *
    * @param developerId the developer id
-   * @param type the report date type
+   * @param type        the report date type
    * @return list of DeviceReportView
    */
   private List<UserReportView> getStatisticsReport(String developerId, ReportType type) {
-    LOG.debug("Enter. reportType: {}.", type);
+    logger.debug("Enter. reportType: {}.", type);
 
     String startDate = DateUtils.getStartDate(type);
     String endDate = DateUtils.getEndDate();
@@ -125,7 +124,7 @@ public class UserReportApplication {
 
     List<UserReportView> result = UserReportMapper.toModel(reports);
 
-    LOG.debug("Exit. user report size: {}.", result.size());
+    logger.debug("Exit. user report size: {}.", result.size());
 
     return result;
   }
@@ -135,15 +134,13 @@ public class UserReportApplication {
    *
    * @param reportDrafts the report drafts
    */
-  public void handleYesterdayReport(List<UserReportView> reportDrafts) {
-    LOG.debug("Enter. report size: {}.", reportDrafts.size());
+  public void handleHourlyReport(List<UserReportView> reportDrafts, Long startTime) {
+    logger.debug("Enter. report size: {}.", reportDrafts.size());
 
-    String yesterdayDate = DateConfig.dateTimeFormatter
-        .format(ZonedDateTime.now(DateConfig.zoneId).minusDays(1L));
+    List<UserReport> reports = UserReportMapper.toEntity(reportDrafts, startTime);
 
-    List<UserReport> reports = UserReportMapper.toEntity(reportDrafts, yesterdayDate);
     service.saveAll(reports);
 
-    LOG.debug("Exit.");
+    logger.debug("Exit.");
   }
 }

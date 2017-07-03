@@ -13,22 +13,17 @@ public class UserReportView {
   private String developerId;
 
   /**
-   * The Local date.
+   * Start time of this hour.
    */
-  private String localDate;
+  private Long startTime;
 
   /**
-   * The Register number.
+   * The increase number of the hour.
    */
-  private Integer registerNumber;
+  private Integer increaseNumber;
 
   /**
-   * The Online number.
+   * 当前的活跃用户(活跃用户的定义为当天有请求的用户，每天的活跃用户则为当天23点的活跃用户数：不同时区不一样).
    */
-  private Integer onlineNumber;
-
-  /**
-   * The Total number.
-   */
-  private Integer totalNumber;
+  private Integer activeNumber;
 }

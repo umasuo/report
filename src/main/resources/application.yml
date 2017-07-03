@@ -28,9 +28,10 @@ jwt:
   secret: QWERTYUIOPASDFGHJKLZXCVBNM
   expires: 72000
 
+# 每个小时的第一分钟统计上一个小时内的数据
 scheduling:
   job:
-    cron: 0 5 0 * * *
+    cron: 0 1 * * * *
 
 device:
   center:

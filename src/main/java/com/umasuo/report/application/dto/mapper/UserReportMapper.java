@@ -32,34 +32,40 @@ public final class UserReportMapper {
   private static UserReportView toModel(UserReport entity) {
     UserReportView model = new UserReportView();
 
-    model.setRegisterNumber(entity.getRegisterNumber());
-    model.setOnlineNumber(entity.getOnlineNumber());
-    model.setTotalNumber(entity.getTotalNumber());
     model.setDeveloperId(entity.getDeveloperId());
-    model.setLocalDate(entity.getLocalDate());
-
+    model.setStartTime(entity.getStartTime());
+    model.setIncreaseNumber(entity.getIncreaseNumber());
     return model;
   }
 
-  public static List<UserReport> toEntity(List<UserReportView> models, String yesterdayDate) {
+  /**
+   * convert report view to entity.
+   * report view comes from other services.
+   *
+   * @param views     UserReportView
+   * @param startTime Long
+   * @return
+   */
+  public static List<UserReport> toEntity(List<UserReportView> views, Long startTime) {
+
     List<UserReport> entities = Lists.newArrayList();
 
-    Consumer<UserReportView> consumer = view -> entities.add(toEntity(view, yesterdayDate));
-
-    models.stream().forEach(consumer);
+    views.stream().forEach(
+        view -> {
+          if (view.getStartTime().equals(startTime)) {
+            entities.add(toEntity(view, startTime));
+          }
+        }
+    );
 
     return entities;
   }
 
-  private static UserReport toEntity(UserReportView model, String localDate) {
+  private static UserReport toEntity(UserReportView model, Long startTime) {
     UserReport entity = new UserReport();
-
-    entity.setRegisterNumber(model.getRegisterNumber());
-    entity.setOnlineNumber(model.getOnlineNumber());
-    entity.setTotalNumber(model.getTotalNumber());
     entity.setDeveloperId(model.getDeveloperId());
-    entity.setLocalDate(localDate);
-
+    entity.setIncreaseNumber(model.getIncreaseNumber());
+    entity.setStartTime(startTime);
     return entity;
   }
 }

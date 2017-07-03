@@ -1,7 +1,6 @@
 package com.umasuo.report.domain.model;
 
 import lombok.Data;
-
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -37,22 +36,22 @@ public class DeviceReport {
   private String deviceDefinitionId;
 
   /**
-   * The Local date.
+   * start time of it's hour.
    */
-  private String localDate;
+  private Long startTime;
 
   /**
-   * The Register number.
+   * The new increase device number.
    */
-  private Integer registerNumber;
+  private Integer increaseNumber;
 
   /**
    * The Online number.
    */
-  private Integer onlineNumber;
+  private Integer activeNumber;
 
   /**
-   * The Total number.
+   * total number of device at this hour.
    */
   private Integer totalNumber;
 }
