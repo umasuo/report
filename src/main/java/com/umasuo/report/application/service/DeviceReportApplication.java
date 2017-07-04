@@ -1,7 +1,5 @@
 package com.umasuo.report.application.service;
 
-import com.google.common.collect.Lists;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
 import com.umasuo.report.application.dto.mapper.DeviceReportMapper;
