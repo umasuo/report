@@ -1,23 +1,20 @@
 package com.umasuo.report.application.service;
 
 import com.google.common.collect.Lists;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
 import com.umasuo.report.application.dto.mapper.DeviceReportMapper;
 import com.umasuo.report.domain.model.DeviceReport;
 import com.umasuo.report.domain.service.DeviceReportService;
-import com.umasuo.report.infrastructure.config.DateConfig;
 import com.umasuo.report.infrastructure.enums.ReportType;
 import com.umasuo.report.infrastructure.util.DateUtils;
-import com.umasuo.report.infrastructure.util.ReportUtils;
-import com.umasuo.report.infrastructure.validator.DateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +27,8 @@ public class DeviceReportApplication {
    * Logger.
    */
   private static final Logger logger = LoggerFactory.getLogger(DeviceReportApplication.class);
+
+  private static long SECOND_OF_DAY = 86400;
 
   /**
    * The Service.
@@ -44,47 +43,19 @@ public class DeviceReportApplication {
   private transient RestClient restClient;
 
   /**
-   * Gets report by period.
-   *
-   * @param developerId the developer id
-   * @param startDate   the start date
-   * @param endDate     the end date
-   * @return the report by period
-   */
-  public List<DeviceReportView> getReportByPeriod(String developerId, String startDate,
-                                                  String endDate) {
-    logger.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
-        developerId, startDate, endDate);
-
-    DateValidator.validatePattern(startDate);
-    DateValidator.validatePattern(endDate);
-    DateValidator.validatePeriod(startDate, endDate);
-
-    List<DeviceReport> reports = service.getReportByDate(developerId, startDate, endDate);
-
-    List<DeviceReportView> result = DeviceReportMapper.toModel(reports);
-    ReportUtils.calculateDeviceReport(result);
-
-    logger.debug("Exit. device report size: {}.", result.size());
-
-    return result;
-  }
-
-  /**
    * Gets report by type.
    *
    * @param developerId the developer id
    * @param reportType  the report type
    * @return the report by type
    */
-  public List<DeviceReportView> getReportByType(String developerId, String reportType) {
+  public List<DeviceReportView> getReportByType(String developerId, String reportType, String
+      timeZone) {
     logger.debug("Enter. reportType: {}.", reportType);
 
-    List<DeviceReportView> result = Lists.newArrayList();
+    List<DeviceReportView> result = new ArrayList<>();
     if (reportType.equals(ReportType.DAILY.getType())) {
-      result = getRealTimeReport(developerId);
-    } else {
-      result = null;
+      result = getDailyReport(developerId, timeZone);
     }
 
     logger.debug("Exit. device report size: {}.", result.size());
@@ -97,50 +68,26 @@ public class DeviceReportApplication {
    * @param developerId the developer id
    * @return list of DeviceReportView
    */
-  private List<DeviceReportView> getRealTimeReport(String developerId) {
+  private List<DeviceReportView> getDailyReport(String developerId, String timeZone) {
     logger.debug("Enter. developerId: {}.");
 
-    long startDate = ZonedDateTime.now(DateConfig.zoneId)
-        .truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli();
+    long endTime = DateUtils.getStartTime(timeZone);
+    long startTime = endTime - SECOND_OF_DAY * 30;
 
-    List<DeviceReportView> result = restClient.getRealTimeDeviceReport(startDate, developerId);
+    List<DeviceReport> hourlyReport = service.getReportByDate(developerId, startTime, endTime);
+    //如此转换有一个前提，就是每次统计都需要正确完成，如果完成不正确，那么统计出的数据可能会跨天
+    List<DeviceReportView> dailyReport = DeviceReportMapper.hourlyToDaily(hourlyReport);
 
-    ReportUtils.calculateDeviceReport(result);
-
-    return result;
+    return dailyReport;
   }
 
   /**
-   * Get statistics report.
-   *
-   * @param developerId the developer id
-   * @param type        the report date type
-   * @return list of DeviceReportView
-   */
-  private List<DeviceReportView> getStatisticsReport(String developerId, ReportType type) {
-    logger.debug("Enter. reportType: {}.", type);
-
-    String startDate = DateUtils.getStartDate(type);
-    String endDate = DateUtils.getEndDate();
-
-    List<DeviceReport> reports = service.getReportByDate(developerId, startDate, endDate);
-
-    List<DeviceReportView> result = DeviceReportMapper.toModel(reports);
-    ReportUtils.calculateDeviceReport(result);
-
-    logger.debug("Exit. device report size: {}.", result.size());
-
-    return result;
-  }
-
-  /**
-   * Handle yesterday report.
+   * 定时任务执行时，用来处理定时任务中拉取到的数据.
    *
    * @param reportDrafts the report drafts
    */
   public void handleHourlyReport(List<DeviceReportDraft> reportDrafts, Long startTime) {
     logger.debug("Enter. report size: {}.", reportDrafts.size());
-
 
     List<DeviceReport> reports = DeviceReportMapper.toEntity(reportDrafts, startTime);
     service.saveAll(reports);

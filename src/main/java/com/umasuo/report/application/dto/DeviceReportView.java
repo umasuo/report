@@ -15,7 +15,7 @@ public class DeviceReportView {
   /**
    * The Local date.
    */
-  private Long startTime;
+  private Long date;
 
   /**
    * The Register number.

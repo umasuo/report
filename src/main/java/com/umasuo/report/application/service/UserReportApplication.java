@@ -63,6 +63,7 @@ public class UserReportApplication {
     return result;
   }
 
+
   /**
    * Get daily report for user reports data.
    * todo 目前只获取近30天的数据.
@@ -75,6 +76,7 @@ public class UserReportApplication {
 
     long endTime = DateUtils.getStartTime(timeZone);
     long startTime = endTime - SECOND_OF_DAY * 30;
+
     List<UserReport> hourlyReport = service.getReportByDate(developerId, startTime, endTime);
     //如此转换有一个前提，就是每次统计都需要正确完成，如果完成不正确，那么统计出的数据可能会跨天
     List<UserReportView> dailyReport = UserReportMapper.hourlyToDaily(hourlyReport);

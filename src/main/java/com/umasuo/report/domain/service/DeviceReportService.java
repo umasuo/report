@@ -35,7 +35,7 @@ public class DeviceReportService {
    * @param endDate the end date
    * @return the report by date
    */
-  public List<DeviceReport> getReportByDate(String developerId, String startDate, String endDate) {
+  public List<DeviceReport> getReportByDate(String developerId, long startDate, long endDate) {
     LOG.debug("Enter. developerId: {}, startDate: {}, endDate: {}.",
         developerId, startDate, endDate);
 

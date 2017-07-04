@@ -5,6 +5,7 @@ import com.umasuo.report.application.dto.DeviceReportDraft;
 import com.umasuo.report.application.dto.DeviceReportView;
 import com.umasuo.report.domain.model.DeviceReport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -84,4 +85,55 @@ public final class DeviceReportMapper {
 
     return entity;
   }
+
+
+  /**
+   * 将以小时为单位统计的数据转换为以天为单位统计的数据,这一步可以在数据库中完成.
+   *
+   * @param hourlyReport
+   * @return
+   */
+  public static List<DeviceReportView> hourlyToDaily(List<DeviceReport> hourlyReport) {
+    List<DeviceReportView> result = new ArrayList<>();
+    int count = 0;
+
+    while (count * 24 < hourlyReport.size()) {
+      int startCount = count * 24;
+      int endCount = (count + 1) * 24 - 1;
+      endCount = endCount > hourlyReport.size() ? hourlyReport.size() - 1 : endCount;
+
+      hourlyToDaily(result, hourlyReport.subList(startCount, endCount));
+
+      count++;
+    }
+
+    return result;
+  }
+
+  /**
+   * 将以小时为单位的统计数据，merge成一条数据。
+   * 最多24小时的24条数据.
+   *
+   * @param result
+   * @param hourlyReport
+   */
+  private static void hourlyToDaily(List<DeviceReportView> result, List<DeviceReport>
+      hourlyReport) {
+
+    DeviceReportView view = new DeviceReportView();
+    view.setIncreaseNumber(0);
+    view.setActiveNumber(0);
+    view.setTotalNumber(0);
+    hourlyReport.stream().forEach(
+        userReport -> {
+          view.setActiveNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
+          view.setTotalNumber(userReport.getTotalNumber());
+          view.setActiveNumber(userReport.getActiveNumber());
+        }
+    );
+    view.setDate(hourlyReport.get(0).getStartTime());
+
+    result.add(view);
+  }
+
 }
