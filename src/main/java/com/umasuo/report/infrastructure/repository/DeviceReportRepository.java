@@ -19,7 +19,7 @@ public interface DeviceReportRepository extends JpaRepository<DeviceReport, Stri
    * @param endDate     the end date
    * @return the report by date
    */
-  @Query("select r from DeviceReport r where r.developerId = ?1 and r.localDate >= ?2 and r" +
-      ".localDate <= ?3 order by r.localDate")
+  @Query("select r from DeviceReport r where r.developerId = ?1 and r.startTime >= ?2 and r" +
+      ".startTime <= ?3 order by r.startTime")
   List<DeviceReport> getReportByDate(String developerId, long startDate, long endDate);
 }
