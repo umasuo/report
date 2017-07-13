@@ -104,9 +104,6 @@ public final class UserReportMapper {
   private static void hourlyToDaily(List<UserReportView> result, List<UserReport> hourlyReport) {
 
     UserReportView view = new UserReportView();
-    view.setIncreaseNumber(0);
-    view.setActiveNumber(0);
-    view.setTotalNumber(0);
     hourlyReport.stream().forEach(
         userReport -> {
           view.setActiveNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
@@ -114,7 +111,7 @@ public final class UserReportMapper {
           view.setActiveNumber(userReport.getActiveNumber());
         }
     );
-    view.setDate(hourlyReport.get(0).getStartTime());
+    view.setDate(hourlyReport.get(0).getStartTime() / 1000);//换算成秒
 
     result.add(view);
   }

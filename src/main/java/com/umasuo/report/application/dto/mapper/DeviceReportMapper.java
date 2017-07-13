@@ -57,7 +57,7 @@ public final class DeviceReportMapper {
 
     reportDrafts.stream().forEach(
         reportDraft -> {
-            entities.add(toEntity(reportDraft, startTime));
+          entities.add(toEntity(reportDraft, startTime));
         }
     );
 
@@ -126,7 +126,7 @@ public final class DeviceReportMapper {
           view.setActiveNumber(userReport.getActiveNumber());
         }
     );
-    view.setDate(hourlyReport.get(0).getStartTime());
+    view.setDate(hourlyReport.get(0).getStartTime() / 1000); //换算成秒
 
     result.add(view);
   }
