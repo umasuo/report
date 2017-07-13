@@ -41,7 +41,7 @@ public class UserReportController {
    * @param timezone    时区值: "GMT+0","GMT+8"...
    * @return
    */
-  @GetMapping(value = USER_REPORT_ROOT, params = {"type", "timeZone"}, headers = {"developerId"})
+  @GetMapping(value = USER_REPORT_ROOT, params = {"type", "timezone"}, headers = {"developerId"})
   public List<UserReportView> getReportByType(@RequestHeader("developerId") String developerId,
                                               @RequestParam("type") String type,
                                               @RequestParam("timeZone") String timezone) {
