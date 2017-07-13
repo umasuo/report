@@ -47,13 +47,13 @@ public class UserReportApplication {
    * @return the report by type
    */
   public List<UserReportView> getReportByType(String developerId, String reportType, String
-      timeZone) {
+      timezone) {
     logger.debug("Enter. reportType: {}.", reportType);
 
     List<UserReportView> result;
 
     if (reportType.equals(ReportType.DAILY.getType())) {
-      result = getDailyReport(developerId, timeZone);
+      result = getDailyReport(developerId, timezone);
     } else {
       // TODO: 17/7/3
       result = new ArrayList<>();
@@ -71,10 +71,10 @@ public class UserReportApplication {
    * @param developerId the developer id
    * @return list of DeviceReportView
    */
-  private List<UserReportView> getDailyReport(String developerId, String timeZone) {
+  private List<UserReportView> getDailyReport(String developerId, String timezone) {
     logger.debug("Enter. developerId: {}.");
 
-    long endTime = DateUtils.getStartTime(timeZone);
+    long endTime = DateUtils.getStartTime(timezone);
     long startTime = endTime - SECOND_OF_DAY * 30;
 
     List<UserReport> hourlyReport = service.getReportByDate(developerId, startTime, endTime);

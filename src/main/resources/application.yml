@@ -33,10 +33,11 @@ scheduling:
   job:
     cron: 0 1 * * * *
 
+# 这俩不应该这么配置才对
 device:
   center:
     service:
-      url: http://localhost:8082/devices/reports/
+      url: http://localhost:8086/v1/devices/reports/
 user:
   service:
-    url: http://localhost:8809/users/reports/
+    url: http://localhost:8809/v1/users/reports/

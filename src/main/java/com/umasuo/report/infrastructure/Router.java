@@ -8,7 +8,7 @@ public class Router {
   /**
    * report root.
    */
-  public static final String REPORT_ROOT = "/reports";
+  public static final String REPORT_ROOT = "/v1/reports";
 
   /**
    * The constant DEVICE_REPORT_ROOT.

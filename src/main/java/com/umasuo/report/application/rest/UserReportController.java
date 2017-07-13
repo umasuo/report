@@ -38,16 +38,16 @@ public class UserReportController {
    *
    * @param developerId 开发者ID
    * @param type        报告类型："daily","weekly", "monthly", "annual"
-   * @param timeZone    时区值: "GMT+0","GMT+8"...
+   * @param timezone    时区值: "GMT+0","GMT+8"...
    * @return
    */
   @GetMapping(value = USER_REPORT_ROOT, params = {"type", "timeZone"}, headers = {"developerId"})
   public List<UserReportView> getReportByType(@RequestHeader("developerId") String developerId,
                                               @RequestParam("type") String type,
-                                              @RequestParam("timeZone") String timeZone) {
+                                              @RequestParam("timeZone") String timezone) {
     logger.info("Enter. report type: {}.", type);
 
-    List<UserReportView> result = application.getReportByType(developerId, type, timeZone);
+    List<UserReportView> result = application.getReportByType(developerId, type, timezone);
 
     logger.info("Exit. user report: {}.", result);
 

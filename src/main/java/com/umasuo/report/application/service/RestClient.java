@@ -44,7 +44,7 @@ public class RestClient {
    * Gets yesterday report.
    *
    * @param startTime the start time
-   * @param endTime the end time
+   * @param endTime   the end time
    * @return the yesterday report
    */
   public List<DeviceReportDraft> getDeviceReport(long startTime, long endTime) {
@@ -64,7 +64,7 @@ public class RestClient {
   /**
    * Gets real time device report.
    *
-   * @param startTime the start time
+   * @param startTime   the start time
    * @param developerId the developer id
    * @return the real time device report
    */
@@ -91,7 +91,7 @@ public class RestClient {
   /**
    * Gets real time device report.
    *
-   * @param startTime the start time
+   * @param startTime   the start time
    * @param developerId the developer id
    * @return the real time device report
    */
@@ -120,7 +120,7 @@ public class RestClient {
    * Gets user report.
    *
    * @param startTime the start time
-   * @param endTime the end time
+   * @param endTime   the end time
    * @return the user report
    */
   public List<UserReportDraft> getUserReport(long startTime, long endTime) {

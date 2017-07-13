@@ -37,17 +37,17 @@ public final class DateUtils {
   /**
    * 获取某个时区的的当前0点.
    *
-   * @param timeZone 时区，格式："GMT+0"
+   * @param timezone 时区，格式："GMT+0"
    * @return Long
    */
-  public static Long getStartTime(String timeZone) {
+  public static Long getStartTime(String timezone) {
 
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.HOUR_OF_DAY, 0);
     cal.set(Calendar.SECOND, 0);
     cal.set(Calendar.MINUTE, 0);
     cal.set(Calendar.MILLISECOND, 0);
-    cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+    cal.setTimeZone(TimeZone.getTimeZone(timezone));
     return cal.getTime().getTime() / 1000;//只精确到秒
   }
 
