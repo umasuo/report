@@ -31,7 +31,7 @@ public final class DateUtils {
     cal.set(Calendar.MINUTE, 0);
     cal.set(Calendar.MILLISECOND, 0);
     cal.setTimeZone(TimeZone.getTimeZone("GMT+0"));
-    return cal.getTime().getTime() / 1000;
+    return cal.getTime().getTime();
   }
 
   /**
@@ -48,7 +48,7 @@ public final class DateUtils {
     cal.set(Calendar.MINUTE, 0);
     cal.set(Calendar.MILLISECOND, 0);
     cal.setTimeZone(TimeZone.getTimeZone(timezone));
-    return cal.getTime().getTime() / 1000;//只精确到秒
+    return cal.getTime().getTime();
   }
 
   /**

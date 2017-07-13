@@ -57,9 +57,7 @@ public final class DeviceReportMapper {
 
     reportDrafts.stream().forEach(
         reportDraft -> {
-          if (reportDraft.getStartTime().equals(startTime)) {
             entities.add(toEntity(reportDraft, startTime));
-          }
         }
     );
 
@@ -79,8 +77,8 @@ public final class DeviceReportMapper {
     entity.setDeveloperId(draft.getDeveloperId());
     entity.setDeviceDefinitionId(draft.getDeviceDefinitionId());
     entity.setStartTime(startTime);
-    entity.setIncreaseNumber(draft.getIncreaseNumber());
-    entity.setActiveNumber(draft.getActiveNumber());
+    entity.setIncreaseNumber(draft.getRegisterNumber());
+    entity.setActiveNumber(draft.getOnlineNumber());
     entity.setTotalNumber(draft.getTotalNumber());
 
     return entity;
@@ -121,9 +119,6 @@ public final class DeviceReportMapper {
       hourlyReport) {
 
     DeviceReportView view = new DeviceReportView();
-    view.setIncreaseNumber(0);
-    view.setActiveNumber(0);
-    view.setTotalNumber(0);
     hourlyReport.stream().forEach(
         userReport -> {
           view.setActiveNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());

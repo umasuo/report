@@ -37,7 +37,7 @@ scheduling:
 device:
   center:
     service:
-      url: http://localhost:8086
+      url: http://localhost:8806
 user:
   service:
     url: http://localhost:8809

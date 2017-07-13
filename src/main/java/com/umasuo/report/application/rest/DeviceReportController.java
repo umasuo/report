@@ -39,13 +39,13 @@ public class DeviceReportController {
    * @param type the report type
    * @return the report by type
    */
-  @GetMapping(value = DEVICE_REPORT_ROOT, params = {"type", "timeZone"}, headers = {"developerId"})
+  @GetMapping(value = DEVICE_REPORT_ROOT, params = {"type", "timezone"}, headers = {"developerId"})
   public List<DeviceReportView> getReportByType(@RequestHeader("developerId") String developerId,
                                                 @RequestParam("type") String type,
-                                                @RequestParam("timeZone") String timeZone) {
+                                                @RequestParam("timezone") String timezone) {
     logger.info("Enter. report type: {}.", type);
 
-    List<DeviceReportView> result = application.getReportByType(developerId, type, timeZone);
+    List<DeviceReportView> result = application.getReportByType(developerId, type, timezone);
 
     logger.info("Exit. device report size: {}.", result);
 

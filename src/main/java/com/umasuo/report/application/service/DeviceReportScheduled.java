@@ -27,7 +27,7 @@ public class DeviceReportScheduled {
   @Autowired
   private transient DeviceReportApplication reportApplication;
 
-  private static long SECOND_OF_HOUR = 3600;
+  private static long SECOND_OF_HOUR = 3600000;
   /**
    * The Rest client.
    */
@@ -42,7 +42,7 @@ public class DeviceReportScheduled {
   private void getHourlyReport() {
     LOG.info("Enter. system time: {}.", ZonedDateTime.now());
 
-    long curTime = System.currentTimeMillis() / 1000;
+    long curTime = System.currentTimeMillis();
     long startTime = curTime - curTime % SECOND_OF_HOUR - SECOND_OF_HOUR;
     long endTime = startTime + SECOND_OF_HOUR;
 

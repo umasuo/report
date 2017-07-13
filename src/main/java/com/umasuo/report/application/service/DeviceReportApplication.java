@@ -26,7 +26,7 @@ public class DeviceReportApplication {
    */
   private static final Logger logger = LoggerFactory.getLogger(DeviceReportApplication.class);
 
-  private static long SECOND_OF_DAY = 86400;
+  private static long MILLI_SECOND_OF_DAY = 86400000;
 
   /**
    * The Service.
@@ -48,12 +48,12 @@ public class DeviceReportApplication {
    * @return the report by type
    */
   public List<DeviceReportView> getReportByType(String developerId, String reportType, String
-      timeZone) {
+      timezone) {
     logger.debug("Enter. reportType: {}.", reportType);
 
     List<DeviceReportView> result = new ArrayList<>();
     if (reportType.equals(ReportType.DAILY.getType())) {
-      result = getDailyReport(developerId, timeZone);
+      result = getDailyReport(developerId, timezone);
     }
 
     logger.debug("Exit. device report size: {}.", result.size());
@@ -66,11 +66,11 @@ public class DeviceReportApplication {
    * @param developerId the developer id
    * @return list of DeviceReportView
    */
-  private List<DeviceReportView> getDailyReport(String developerId, String timeZone) {
+  private List<DeviceReportView> getDailyReport(String developerId, String timezone) {
     logger.debug("Enter. developerId: {}.");
 
-    long endTime = DateUtils.getStartTime(timeZone);
-    long startTime = endTime - SECOND_OF_DAY * 30;
+    long endTime = DateUtils.getStartTime(timezone);
+    long startTime = endTime - MILLI_SECOND_OF_DAY * 30;
 
     List<DeviceReport> hourlyReport = service.getReportByDate(developerId, startTime, endTime);
     //如此转换有一个前提，就是每次统计都需要正确完成，如果完成不正确，那么统计出的数据可能会跨天

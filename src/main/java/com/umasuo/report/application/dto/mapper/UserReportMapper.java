@@ -54,9 +54,7 @@ public final class UserReportMapper {
 
     views.stream().forEach(
         view -> {
-          if (view.getStartTime().equals(startTime)) {
             entities.add(toEntity(view, startTime));
-          }
         }
     );
 
