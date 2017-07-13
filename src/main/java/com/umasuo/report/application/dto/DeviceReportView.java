@@ -20,15 +20,15 @@ public class DeviceReportView {
   /**
    * The Register number.
    */
-  private Integer increaseNumber;
+  private int increaseNumber;
 
   /**
    * The Online number.
    */
-  private Integer activeNumber;
+  private int activeNumber;
 
   /**
    * The Total number.
    */
-  private Integer totalNumber;
+  private int totalNumber;
 }
