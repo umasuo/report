@@ -37,7 +37,7 @@ scheduling:
 device:
   center:
     service:
-      url: http://localhost:8086/v1/devices/reports/
+      url: http://localhost:8086
 user:
   service:
-    url: http://localhost:8809/v1/users/reports/
+    url: http://localhost:8809

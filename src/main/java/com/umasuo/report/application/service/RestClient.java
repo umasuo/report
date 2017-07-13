@@ -50,7 +50,7 @@ public class RestClient {
   public List<DeviceReportDraft> getDeviceReport(long startTime, long endTime) {
     LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
-    String url = UriComponentsBuilder.fromHttpUrl(deviceCenterUrl)
+    String url = UriComponentsBuilder.fromHttpUrl(deviceCenterUrl + "/v1/devices/reports/")
         .queryParam("startTime", startTime)
         .queryParam("endTime", endTime).build().encode().toUriString();
 
@@ -76,7 +76,7 @@ public class RestClient {
 
     HttpEntity entity = new HttpEntity(headers);
 
-    String url = UriComponentsBuilder.fromHttpUrl(deviceCenterUrl)
+    String url = UriComponentsBuilder.fromHttpUrl(deviceCenterUrl + "/v1/devices/reports/")
         .queryParam("startTime", startTime).build().encode().toUriString();
 
     ResponseEntity<DeviceReportView[]> response =
@@ -103,7 +103,7 @@ public class RestClient {
 
     HttpEntity entity = new HttpEntity(headers);
 
-    String url = UriComponentsBuilder.fromHttpUrl(userUrl)
+    String url = UriComponentsBuilder.fromHttpUrl(userUrl + "/v1/users/reports/")
         .queryParam("startTime", startTime).build().encode().toUriString();
 
     ResponseEntity<UserReportDraft> response =
@@ -126,7 +126,7 @@ public class RestClient {
   public List<UserReportDraft> getUserReport(long startTime, long endTime) {
     LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
-    String url = UriComponentsBuilder.fromHttpUrl(userUrl)
+    String url = UriComponentsBuilder.fromHttpUrl(userUrl + "/v1/users/reports/")
         .queryParam("startTime", startTime)
         .queryParam("endTime", endTime).build().encode().toUriString();
 
