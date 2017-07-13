@@ -26,7 +26,7 @@ public class UserReportApplication {
    */
   private static final Logger logger = LoggerFactory.getLogger(UserReportApplication.class);
 
-  private static long SECOND_OF_DAY = 86400;
+  private static long MILLI_SECOND_OF_DAY = 86400000;
   /**
    * The Service.
    */
@@ -75,7 +75,7 @@ public class UserReportApplication {
     logger.debug("Enter. developerId: {}.");
 
     long endTime = DateUtils.getStartTime(timezone);
-    long startTime = endTime - SECOND_OF_DAY * 30;
+    long startTime = endTime - MILLI_SECOND_OF_DAY * 30;
 
     List<UserReport> hourlyReport = service.getReportByDate(developerId, startTime, endTime);
     //如此转换有一个前提，就是每次统计都需要正确完成，如果完成不正确，那么统计出的数据可能会跨天
