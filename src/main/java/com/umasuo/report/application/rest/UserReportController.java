@@ -44,7 +44,7 @@ public class UserReportController {
   @GetMapping(value = USER_REPORT_ROOT, params = {"type", "timezone"}, headers = {"developerId"})
   public List<UserReportView> getReportByType(@RequestHeader("developerId") String developerId,
                                               @RequestParam("type") String type,
-                                              @RequestParam("timeZone") String timezone) {
+                                              @RequestParam("timezone") String timezone) {
     logger.info("Enter. report type: {}.", type);
 
     List<UserReportView> result = application.getReportByType(developerId, type, timezone);
