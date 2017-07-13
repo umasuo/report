@@ -121,7 +121,7 @@ public final class DeviceReportMapper {
     DeviceReportView view = new DeviceReportView();
     hourlyReport.stream().forEach(
         userReport -> {
-          view.setActiveNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
+          view.setIncreaseNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
           view.setTotalNumber(userReport.getTotalNumber());
           view.setActiveNumber(userReport.getActiveNumber());
         }

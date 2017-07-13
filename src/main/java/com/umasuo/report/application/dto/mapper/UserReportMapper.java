@@ -54,7 +54,7 @@ public final class UserReportMapper {
 
     views.stream().forEach(
         view -> {
-            entities.add(toEntity(view, startTime));
+          entities.add(toEntity(view, startTime));
         }
     );
 
@@ -106,7 +106,7 @@ public final class UserReportMapper {
     UserReportView view = new UserReportView();
     hourlyReport.stream().forEach(
         userReport -> {
-          view.setActiveNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
+          view.setIncreaseNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
           view.setTotalNumber(userReport.getTotalNumber());
           view.setActiveNumber(userReport.getActiveNumber());
         }
