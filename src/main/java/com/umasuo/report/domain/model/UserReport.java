@@ -39,16 +39,16 @@ public class UserReport {
   /**
    * 这个小时内新增的用户数量.
    */
-  private Integer increaseNumber;
+  private int increaseNumber;
 
   /**
    * 截止目前，当天的活跃的用户数.
    */
-  private Integer activeNumber;
+  private int activeNumber;
 
   /**
    * 截止当前小时，总的用户注册数
    */
-  private Integer totalNumber;
+  private int totalNumber;
 
 }

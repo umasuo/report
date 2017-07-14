@@ -43,15 +43,15 @@ public class DeviceReport {
   /**
    * The new increase device number.
    */
-  private Integer increaseNumber;
+  private int increaseNumber;
 
   /**
    * The Online number.
    */
-  private Integer activeNumber;
+  private int activeNumber;
 
   /**
    * total number of device at this hour.
    */
-  private Integer totalNumber;
+  private int totalNumber;
 }

@@ -21,8 +21,8 @@ public final class UserReportMapper {
   }
 
 
-  public static List<UserReportDraft> toModel(List<UserReport> entities) {
-    List<UserReportDraft> models = Lists.newArrayList();
+  public static List<UserReportView> toModel(List<UserReport> entities) {
+    List<UserReportView> models = Lists.newArrayList();
 
     Consumer<UserReport> consumer = report -> models.add(toModel(report));
 
@@ -31,11 +31,12 @@ public final class UserReportMapper {
     return models;
   }
 
-  private static UserReportDraft toModel(UserReport entity) {
-    UserReportDraft model = new UserReportDraft();
+  private static UserReportView toModel(UserReport entity) {
+    UserReportView model = new UserReportView();
 
-    model.setDeveloperId(entity.getDeveloperId());
-    model.setStartTime(entity.getStartTime());
+    model.setDate(entity.getStartTime());
+    model.setActiveNumber(entity.getActiveNumber());
+    model.setTotalNumber(entity.getTotalNumber());
     model.setIncreaseNumber(entity.getIncreaseNumber());
     return model;
   }
