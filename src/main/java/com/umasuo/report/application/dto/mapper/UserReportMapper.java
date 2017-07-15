@@ -68,6 +68,7 @@ public final class UserReportMapper {
     entity.setStartTime(startTime);
     entity.setIncreaseNumber(view.getIncreaseNumber());
     entity.setTotalNumber(view.getTotalNumber());
+    entity.setActiveNumber(view.getActiveNumber());
     return entity;
   }
 
