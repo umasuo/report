@@ -94,7 +94,7 @@ public class UserReportApplication {
   public void handleFetchHourlyReport(List<UserReportDraft> reportDrafts, Long startTime) {
     logger.debug("Enter. report size: {}.", reportDrafts.size());
 
-    List<UserReport> reports = UserReportMapper.toEntity(reportDrafts, startTime);
+    List<UserReport> reports = UserReportMapper.toModel(reportDrafts, startTime);
 
     service.saveAll(reports);
 

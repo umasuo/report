@@ -10,28 +10,39 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created by Davis on 17/6/16.
+ * Mapper class for UserReport.
  */
 public final class UserReportMapper {
 
   /**
-   * Instantiates a new User report mapper.
+   * Private constructor.
    */
   private UserReportMapper() {
   }
 
-
-  public static List<UserReportView> toModel(List<UserReport> entities) {
+  /**
+   * Convert list of UserReport to list of UserReportView.
+   *
+   * @param entities list of UserReport
+   * @return list of UserReportView
+   */
+  public static List<UserReportView> toView(List<UserReport> entities) {
     List<UserReportView> models = Lists.newArrayList();
 
-    Consumer<UserReport> consumer = report -> models.add(toModel(report));
+    Consumer<UserReport> consumer = report -> models.add(toView(report));
 
     entities.stream().forEach(consumer);
 
     return models;
   }
 
-  private static UserReportView toModel(UserReport entity) {
+  /**
+   * Convert UserReport to UserReportView.
+   *
+   * @param entity the UserReport
+   * @return the UserReportView
+   */
+  private static UserReportView toView(UserReport entity) {
     UserReportView model = new UserReportView();
 
     model.setDate(entity.getStartTime());
@@ -42,42 +53,50 @@ public final class UserReportMapper {
   }
 
   /**
-   * convert report view to entity.
-   * report view comes from other services.
+   * Convert list of UserReportDraft to list of UserReport.
+   * UserReportDraft comes from other services.
    *
-   * @param views     UserReportDraft
+   * @param drafts UserReportDraft
    * @param startTime Long
-   * @return
+   * @return the list
    */
-  public static List<UserReport> toEntity(List<UserReportDraft> views, Long startTime) {
+  public static List<UserReport> toModel(List<UserReportDraft> drafts, Long startTime) {
 
     List<UserReport> entities = Lists.newArrayList();
 
-    views.stream().forEach(
+    drafts.stream().forEach(
         view -> {
-          entities.add(toEntity(view, startTime));
+          entities.add(toModel(view, startTime));
         }
     );
 
     return entities;
   }
 
-  private static UserReport toEntity(UserReportDraft view, Long startTime) {
+  /**
+   * Convert UserReportDraft to UserReport.
+   * report view comes from other services.
+   *
+   * @param draft UserReportDraft
+   * @param startTime Long
+   */
+  private static UserReport toModel(UserReportDraft draft, Long startTime) {
     UserReport entity = new UserReport();
-    entity.setDeveloperId(view.getDeveloperId());
+
+    entity.setDeveloperId(draft.getDeveloperId());
     entity.setStartTime(startTime);
-    entity.setIncreaseNumber(view.getIncreaseNumber());
-    entity.setTotalNumber(view.getTotalNumber());
-    entity.setActiveNumber(view.getActiveNumber());
+    entity.setIncreaseNumber(draft.getIncreaseNumber());
+    entity.setTotalNumber(draft.getTotalNumber());
+    entity.setActiveNumber(draft.getActiveNumber());
+
     return entity;
   }
-
 
   /**
    * 将以小时为单位统计的数据转换为以天为单位统计的数据,这一步可以在数据库中完成.
    *
-   * @param hourlyReport
-   * @return
+   * @param hourlyReport the hourly report
+   * @return the list
    */
   public static List<UserReportView> hourlyToDaily(List<UserReport> hourlyReport) {
     List<UserReportView> result = new ArrayList<>();
@@ -99,13 +118,10 @@ public final class UserReportMapper {
   /**
    * 将以小时为单位的统计数据，merge成一条数据。
    * 最多24小时的24条数据.
-   *
-   * @param result
-   * @param hourlyReport
    */
   private static void hourlyToDaily(List<UserReportView> result, List<UserReport> hourlyReport) {
-
     UserReportView view = new UserReportView();
+
     hourlyReport.stream().forEach(
         userReport -> {
           view.setIncreaseNumber(view.getIncreaseNumber() + userReport.getIncreaseNumber());
@@ -113,10 +129,10 @@ public final class UserReportMapper {
           view.setActiveNumber(userReport.getActiveNumber());
         }
     );
+
     view.setDate(hourlyReport.get(0).getStartTime() / 1000);//换算成秒
 
     result.add(view);
   }
-
 
 }

@@ -1,14 +1,10 @@
 server:
   port: 8811
-  date:
-    zone: Etc/GMT-8
-    formatter: yyyyMMdd
 
 logging:
   level:
     com.netflix.discovery: 'OFF'
     org.springframework.cloud: 'DEBUG'
-
 
 spring:
   application:

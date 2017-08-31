@@ -7,6 +7,7 @@ import com.umasuo.report.domain.model.DeviceReport;
 import com.umasuo.report.domain.service.DeviceReportService;
 import com.umasuo.report.infrastructure.enums.ReportType;
 import com.umasuo.report.infrastructure.util.DateUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,39 +25,36 @@ public class DeviceReportApplication {
   /**
    * Logger.
    */
-  private static final Logger logger = LoggerFactory.getLogger(DeviceReportApplication.class);
-
-  private static long MILLI_SECOND_OF_DAY = 86400000;
+  private static final Logger LOG = LoggerFactory.getLogger(DeviceReportApplication.class);
 
   /**
-   * The Service.
+   * Milli second of one day.
    */
-  @Autowired
-  private DeviceReportService service;
+  private final static long MILLI_SECOND_OF_DAY = 86400000;
 
   /**
-   * The Rest client.
+   * The DeviceReportService.
    */
   @Autowired
-  private transient RestClient restClient;
+  private transient DeviceReportService service;
 
   /**
    * Gets report by type.
    *
    * @param developerId the developer id
-   * @param reportType  the report type
+   * @param reportType the report type
    * @return the report by type
    */
   public List<DeviceReportView> getReportByType(String developerId, String reportType, String
       timezone) {
-    logger.debug("Enter. reportType: {}.", reportType);
+    LOG.debug("Enter. reportType: {}.", reportType);
 
     List<DeviceReportView> result = new ArrayList<>();
     if (reportType.equals(ReportType.DAILY.getType())) {
       result = getDailyReport(developerId, timezone);
     }
 
-    logger.debug("Exit. device report size: {}.", result.size());
+    LOG.debug("Exit. device report size: {}.", result.size());
     return result;
   }
 
@@ -67,7 +65,7 @@ public class DeviceReportApplication {
    * @return list of DeviceReportView
    */
   private List<DeviceReportView> getDailyReport(String developerId, String timezone) {
-    logger.debug("Enter. developerId: {}.");
+    LOG.debug("Enter. developerId: {}.");
 
     long endTime = DateUtils.getStartTime(timezone);
     long startTime = endTime - MILLI_SECOND_OF_DAY * 30;
@@ -85,11 +83,11 @@ public class DeviceReportApplication {
    * @param reportDrafts the report drafts
    */
   public void handleHourlyReport(List<DeviceReportDraft> reportDrafts, Long startTime) {
-    logger.debug("Enter. report size: {}.", reportDrafts.size());
+    LOG.debug("Enter. report size: {}.", reportDrafts.size());
 
     List<DeviceReport> reports = DeviceReportMapper.toEntity(reportDrafts, startTime);
     service.saveAll(reports);
 
-    logger.debug("Exit.");
+    LOG.debug("Exit.");
   }
 }

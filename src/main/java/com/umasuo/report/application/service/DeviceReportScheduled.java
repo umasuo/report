@@ -1,6 +1,7 @@
 package com.umasuo.report.application.service;
 
 import com.umasuo.report.application.dto.DeviceReportDraft;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,15 @@ public class DeviceReportScheduled {
   private static final Logger LOG = LoggerFactory.getLogger(DeviceReportScheduled.class);
 
   /**
-   * The Report application.
+   * The DeviceReportApplication.
    */
   @Autowired
   private transient DeviceReportApplication reportApplication;
 
-  private static long SECOND_OF_HOUR = 3600000;
+  /**
+   * Second of one hour.
+   */
+  private final static long SECOND_OF_HOUR = 3600000;
   /**
    * The Rest client.
    */
