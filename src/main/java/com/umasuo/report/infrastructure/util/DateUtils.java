@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Created by Davis on 17/6/15.
+ * Data utils.
  */
 public final class DateUtils {
 

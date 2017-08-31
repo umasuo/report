@@ -24,10 +24,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-jwt:
-  secret: QWERTYUIOPASDFGHJKLZXCVBNM
-  expires: 72000
-
 # 每个小时的第一分钟统计上一个小时内的数据
 scheduling:
   job:
