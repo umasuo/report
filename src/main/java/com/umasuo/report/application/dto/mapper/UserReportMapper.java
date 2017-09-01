@@ -21,10 +21,10 @@ public final class UserReportMapper {
   }
 
   /**
-   * Convert list of UserReport to list of UserReportView.
+   * Convert list build UserReport to list build UserReportView.
    *
-   * @param entities list of UserReport
-   * @return list of UserReportView
+   * @param entities list build UserReport
+   * @return list build UserReportView
    */
   public static List<UserReportView> toView(List<UserReport> entities) {
     List<UserReportView> models = Lists.newArrayList();
@@ -53,7 +53,7 @@ public final class UserReportMapper {
   }
 
   /**
-   * Convert list of UserReportDraft to list of UserReport.
+   * Convert list build UserReportDraft to list build UserReport.
    * UserReportDraft comes from other services.
    *
    * @param drafts UserReportDraft

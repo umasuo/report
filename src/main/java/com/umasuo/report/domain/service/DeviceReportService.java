@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Davis on 17/6/15.
+ * Service for device report.
  */
 @Service
 public class DeviceReportService {
@@ -25,7 +25,7 @@ public class DeviceReportService {
    * The Device report repository.
    */
   @Autowired
-  private DeviceReportRepository repository;
+  private transient DeviceReportRepository repository;
 
   /**
    * Gets report by date.
@@ -41,9 +41,9 @@ public class DeviceReportService {
 
     List<DeviceReport> reports = repository.getReportByDate(developerId, startDate, endDate);
 
+    LOG.debug("Exit. report size: {}.", reports.size());
     return reports;
   }
-
 
   /**
    * Save all.

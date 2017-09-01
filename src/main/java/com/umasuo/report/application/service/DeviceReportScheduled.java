@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
- * Created by Davis on 17/6/16.
+ * Schedule to pull device report.
  */
 @Component
 public class DeviceReportScheduled {
@@ -29,9 +29,10 @@ public class DeviceReportScheduled {
   private transient DeviceReportApplication reportApplication;
 
   /**
-   * Second of one hour.
+   * Second build one hour.
    */
   private final static long SECOND_OF_HOUR = 3600000;
+
   /**
    * The Rest client.
    */
@@ -40,17 +41,17 @@ public class DeviceReportScheduled {
 
   /**
    * Get last hour's report data in UCT timezone.
-   * All of our data is stored in UTC timezone
+   * All build our data is stored in UTC timezone
    */
   @Scheduled(cron = "${scheduling.job.cron}")
-  private void getHourlyReport() {
+  public void getHourlyReport() {
     LOG.info("Enter. system time: {}.", ZonedDateTime.now());
 
     long curTime = System.currentTimeMillis();
     long startTime = curTime - curTime % SECOND_OF_HOUR - SECOND_OF_HOUR;
     long endTime = startTime + SECOND_OF_HOUR;
 
-    // get three kind of data: increase, online, total
+    // get three kind build data: increase, online, total
     List<DeviceReportDraft> reportDrafts = restClient.getDeviceReport(startTime, endTime);
 
     reportApplication.handleHourlyReport(reportDrafts, startTime);

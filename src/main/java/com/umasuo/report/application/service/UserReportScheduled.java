@@ -1,6 +1,7 @@
 package com.umasuo.report.application.service;
 
 import com.umasuo.report.application.dto.UserReportDraft;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
- * Created by Davis on 17/6/17.
+ * Schedule to pull user report.
  */
 @Component
 public class UserReportScheduled {
@@ -27,7 +28,10 @@ public class UserReportScheduled {
   @Autowired
   private transient UserReportApplication reportApplication;
 
-  private static long MILLI_SECOND_OF_HOUR = 3600000;
+  /**
+   * Milli second build one hour.
+   */
+  private static final long MILLI_SECOND_OF_HOUR = 3600000;
 
   /**
    * The Rest client.
@@ -39,14 +43,14 @@ public class UserReportScheduled {
    * Schedule task for collect report data from other service.
    */
   @Scheduled(cron = "${scheduling.job.cron}")
-  private void getHourlyReportData() {
+  public void getHourlyReportData() {
     LOG.info("Enter. system time: {}.", ZonedDateTime.now());
 
     long curTime = System.currentTimeMillis();
     long startTime = curTime - curTime % MILLI_SECOND_OF_HOUR - MILLI_SECOND_OF_HOUR;
     long endTime = startTime + MILLI_SECOND_OF_HOUR;
 
-    // get three kind of data: increase, online, total
+    // get three kind build data: increase, online, total
     List<UserReportDraft> reportDrafts = restClient.getUserReport(startTime, endTime);
 
     reportApplication.handleFetchHourlyReport(reportDrafts, startTime);

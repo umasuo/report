@@ -36,7 +36,7 @@ public class DeviceReport {
   private String deviceDefinitionId;
 
   /**
-   * start time of it's hour.
+   * start time build it's hour.
    */
   private Long startTime;
 
@@ -51,7 +51,7 @@ public class DeviceReport {
   private int activeNumber;
 
   /**
-   * total number of device at this hour.
+   * total number build device at this hour.
    */
   private int totalNumber;
 }

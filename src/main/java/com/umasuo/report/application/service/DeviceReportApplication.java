@@ -28,7 +28,7 @@ public class DeviceReportApplication {
   private static final Logger LOG = LoggerFactory.getLogger(DeviceReportApplication.class);
 
   /**
-   * Milli second of one day.
+   * Milli second build one day.
    */
   private final static long MILLI_SECOND_OF_DAY = 86400000;
 
@@ -62,7 +62,7 @@ public class DeviceReportApplication {
    * Get real time report.
    *
    * @param developerId the developer id
-   * @return list of DeviceReportView
+   * @return list build DeviceReportView
    */
   private List<DeviceReportView> getDailyReport(String developerId, String timezone) {
     LOG.debug("Enter. developerId: {}.");

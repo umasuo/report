@@ -2,9 +2,8 @@ package com.umasuo.report.infrastructure.exception;
 
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.NotExistException;
-import com.umasuo.exception.PasswordErrorException;
 import com.umasuo.exception.handler.ExceptionHandler;
-import com.umasuo.report.infrastructure.util.JsonUtils;
+import com.umasuo.util.JsonUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,26 +17,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by umasuo on 17/3/2.
+ * Exception handler.
  */
 @Component
-public class UserExceptionHandler implements ExceptionHandler, HandlerExceptionResolver {
+public class ReportExceptionHandler implements ExceptionHandler, HandlerExceptionResolver {
 
-  private static Logger logger = LoggerFactory.getLogger(UserExceptionHandler.class);
+  /**
+   * Logger.
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(ReportExceptionHandler.class);
 
+  /**
+   * Resolve exception.
+   *
+   * @param request the HttpServletRequest
+   * @param response the HttpServletResponse
+   * @param handler the Object
+   * @param ex the Exception
+   * @return ModelAndView
+   */
   @Override
   public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
-                                       Object handler, Exception ex) {
+      Object handler, Exception ex) {
     setResponse(request, response, handler, ex);
     addExceptionBody(response, ex);
     return new ModelAndView();
   }
 
   /**
-   * add customized message body to the response.
-   *
-   * @param response
-   * @param ex
+   * Add customized message body to the response.
    */
   private void addExceptionBody(HttpServletResponse response, Exception ex) {
     try {
@@ -46,13 +54,13 @@ public class UserExceptionHandler implements ExceptionHandler, HandlerExceptionR
         response.getWriter().print(JsonUtils.serialize(body));
       }
     } catch (IOException e) {
-      logger.error("failed to write response JSON", e);
+      LOG.error("failed to write response JSON", e);
       throw new IllegalStateException(e);
     }
   }
 
   /**
-   * get customized message body by exception type.
+   * Get customized message body by exception type.
    *
    * @param ex exception.
    * @return exception body.
@@ -60,16 +68,10 @@ public class UserExceptionHandler implements ExceptionHandler, HandlerExceptionR
   private ExceptionBody getBody(Exception ex) {
     ExceptionBody body = null;
     if (ex instanceof NotExistException) {
-      body = ExceptionBody.of(ExceptionBody.DEVELOPER_NOT_EXIST_CODE, ExceptionBody
-          .DEVELOPER_NOT_EXIST_MESSAGE);
+      body = ExceptionBody.build(ExceptionBody.NOT_EXIST_CODE, ex.getMessage());
     }
     if (ex instanceof AlreadyExistException) {
-      body = ExceptionBody.of(ExceptionBody.DEVELOPER_ALREADY_EXIST_CODE, ExceptionBody
-          .DEVELOPER_ALREADY_EXIST_MESSAGE);
-    }
-    if (ex instanceof PasswordErrorException) {
-      body = ExceptionBody.of(ExceptionBody.EMAIL_OR_PASSWORD_ERROR_CODE, ExceptionBody
-          .EMAIL_OR_PASSWORD_ERROR_MESSAGE);
+      body = ExceptionBody.build(ExceptionBody.ALREADY_EXIST_CODE, ex.getMessage());
     }
     return body;
   }

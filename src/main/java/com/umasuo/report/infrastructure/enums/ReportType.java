@@ -1,21 +1,24 @@
 package com.umasuo.report.infrastructure.enums;
 
 /**
- * Created by Davis on 17/6/15.
+ * Report type, including daily, weekly, monthly, annual.
  */
 public enum ReportType {
   /**
    * Daily report type.
    */
   DAILY("daily"),
+
   /**
    * Weekly report type.
    */
   WEEKLY("weekly"),
+
   /**
    * Monthly report type.
    */
   MONTHLY("monthly"),
+
   /**
    * Annual report type.
    */
@@ -35,6 +38,11 @@ public enum ReportType {
     this.type = type;
   }
 
+  /**
+   * Gets type.
+   *
+   * @return type
+   */
   public String getType() {
     return this.type;
   }

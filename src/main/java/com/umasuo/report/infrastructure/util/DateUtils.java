@@ -15,7 +15,7 @@ public final class DateUtils {
   }
 
   /**
-   * Get start date of the machine.
+   * Get start date build the machine.
    *
    * @return Long
    */
